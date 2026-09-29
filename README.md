@@ -2,7 +2,7 @@
 
 **A Python GUI application to fix "Request e-signatures" issues in Adobe Acrobat.**
 
-Converts the PowerShell script to a user-friendly GUI with additional features.
+A GUI port of the original PowerShell script, with a few extra conveniences.
 
 ## 🎯 What It Does
 
@@ -26,7 +26,7 @@ Clears cached Adobe identity and Acrobat Sign tokens when users experience issue
 
 ### Option 1: Run from Python
 
-1. **Install Python 3.7+** from [python.org](https://python.org)
+1. **Install Python 3.8+** from [python.org](https://python.org)
 2. **Download this tool**
 3. **Double-click** `run_adobe_reset.bat`
    
@@ -62,6 +62,7 @@ pyinstaller --onefile --windowed --name "AdobeSignCacheReset" adobe_cache_reset.
 │    • Adobe OOBE (identity/entitlement cache)                │
 │    • Acrobat CEF (Chromium) caches                          │
 │    • Acrobat JavaScript cache                               │
+│    • Adobe Security CSI cache                               │
 │    • Windows Web Credentials for Adobe                      │
 │                                                              │
 │  [🚀 Run Cache Reset] [🔍 Check Processes] [📁 Open Backup] │
@@ -102,14 +103,15 @@ pyinstaller --onefile --windowed --name "AdobeSignCacheReset" adobe_cache_reset.
 
 - ✅ **Automatic backups** before clearing anything
 - ✅ **Confirmation dialog** before running
-- ✅ **Process safety** - closes Adobe apps gracefully
+- ✅ **Process safety** - closes Adobe apps before touching their files
+- ✅ **Never deletes un-backed-up data** - a folder is only removed after its backup succeeds
 - ✅ **Error handling** - continues even if some paths fail
 - ✅ **Restore capability** - backups saved with timestamps
 
 ## 🐛 Troubleshooting
 
 ### "Python not found"
-Install Python 3.7+ from [python.org](https://python.org) and check "Add Python to PATH"
+Install Python 3.8+ from [python.org](https://python.org) and check "Add Python to PATH"
 
 ### Adobe still not working after reset
 1. **Reboot** your computer - some token caches require restart
@@ -135,9 +137,9 @@ Backups are timestamped and kept indefinitely. Periodically clean out:
 | Process check | ❌ Manual | ✅ Built-in button |
 | Backup browsing | ❌ Manual | ✅ One-click open |
 | Log export | ❌ Manual | ✅ Copy/Save buttons |
-| Cross-platform | ❌ Windows only | ✅ Works on macOS/Linux* |
+| Cross-platform | ❌ Windows only | ⚠️ Reset is Windows only* |
 
-*Note: Full functionality requires Windows for credential manager access
+*The window opens on macOS/Linux (process check and log tools work), but the cache reset itself is disabled there.
 
 ## 🔧 Technical Details
 
@@ -159,7 +161,7 @@ Uses only Python standard library - no pip installs required.
 
 ```
 adobe-sign-cache-reset/
-├── adobe_cache_reset.py      # Main GUI application (522 lines)
+├── adobe_cache_reset.py      # Main GUI application
 ├── run_adobe_reset.bat       # Windows launcher
 ├── requirements.txt          # Dependencies (none - stdlib only)
 └── README.md                 # This documentation
@@ -170,12 +172,12 @@ adobe-sign-cache-reset/
 1. **Close Adobe Processes** - Safely stops Acrobat, Creative Cloud, and related services
 2. **Backup Caches** - Copies all cache folders to backup location with timestamp
 3. **Clear Caches** - Removes identity and token caches from:
-   - `%LOCALAPPDATA%\Adobe\OOBE`
-   - `%APPDATA%\Adobe\Acrobat\DC\AcroCEF\Cache`
+   - `%LOCALAPPDATA%\Adobe\OOBE` and `%APPDATA%\Adobe\OOBE`
+   - `%APPDATA%\Adobe\Acrobat\DC\AcroCEF\Cache` and `GPUCache` (and the `%LOCALAPPDATA%` equivalents)
    - `%APPDATA%\Adobe\Acrobat\DC\JSCache`
    - `%APPDATA%\Adobe\Acrobat\DC\Security\csi`
 4. **Clear Credentials** - Removes Adobe entries from Windows Credential Manager
-5. **Restart Services** - Starts Creative Cloud helper (optional)
+5. **Restart Services** - Starts the Creative Cloud helper if it's installed
 
 ## 🙏 Credits
 
