@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Convo People</title>
+  <link rel="stylesheet" href="/shared/glass.css">
+</head>
+<body class="phone">
+  <main class="screen">
+    <div class="label">Convo Notes · edit on your phone</div>
+    <div class="mid">People</div>
+    <div class="dim">One person per line:<br><code>Full Name | nicknames, comma separated | note; another note</code></div>
+    <textarea id="list" aria-label="People, one per line"></textarea>
+    <div><button class="primary" id="save">Save</button></div>
+    <div class="dim" id="status" role="status"></div>
+  </main>
+  <script type="module">
+    import { loadShared, saveShared } from '/shared/store.js';
+
+    const KEY = 'convo.people';
+    const box = document.getElementById('list');
+    const status = document.getElementById('status');
+    const people = await loadShared(KEY, []);
+
+    // Pipes and semicolons are the separators, so swap them out of the text itself.
+    const clean = (s) => String(s).replace(/[|;]/g, ',').trim();
+    box.value = people.map((p) =>
+      [clean(p.name), (p.aliases || []).map(clean).join(', '), (p.notes || []).map(clean).join('; ')].join(' | ')).join('\n');
+
+    document.getElementById('save').addEventListener('click', async () => {
+      const next = box.value.split('\n').map((line) => line.trim()).filter(Boolean).map((line) => {
+        const [name = '', aliases = '', notes = ''] = line.split('|').map((s) => s.trim());
+        return {
+          name,
+          aliases: aliases.split(',').map((s) => s.trim()).filter(Boolean),
+          notes: notes.split(';').map((s) => s.trim()).filter(Boolean),
+        };
+      }).filter((p) => p.name);
+      const ok = await saveShared(KEY, next);
+      status.textContent = ok ? `Saved ${next.length} people ✓` : 'Saved on this device only (server unreachable)';
+    });
+  </script>
+</body>
+</html>

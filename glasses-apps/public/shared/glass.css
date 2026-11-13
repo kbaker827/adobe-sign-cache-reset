@@ -1,0 +1,139 @@
+/* Shared look for every app on the glasses.
+   The display is additive: black pixels are see-through, so we use a pure
+   black background, thin outlines instead of filled boxes, and big text. */
+:root {
+  --bg: #000;
+  --fg: #f2f2f2;
+  --dim: #8c8c8c;
+  --line: #3a3a3a;
+  --accent: #7cffb2;
+  --warn: #ffd166;
+  --bad: #ff6b6b;
+  --info: #7cc8ff;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 500 28px/1.25 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* One fixed "lens-sized" screen. 600x600 is the design target. */
+.screen {
+  width: 100vw;
+  height: 100vh;
+  max-width: 600px;
+  max-height: 600px;
+  margin: 0 auto;
+  padding: 28px 32px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+  position: relative;
+}
+
+.label { color: var(--dim); font-size: 20px; letter-spacing: 0.12em; text-transform: uppercase; }
+.big { font-size: 44px; font-weight: 700; line-height: 1.12; overflow-wrap: anywhere; }
+.mid { font-size: 32px; font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.dim { color: var(--dim); font-size: 22px; }
+.accent { color: var(--accent); }
+.warn { color: var(--warn); }
+.bad { color: var(--bad); }
+.info { color: var(--info); }
+
+.timer { font-size: 36px; font-variant-numeric: tabular-nums; color: var(--dim); }
+.timer.warn { color: var(--warn); }
+
+.card {
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  padding: 16px 20px;
+}
+.card.accent { border-color: var(--accent); }
+
+.banner {
+  border: 2px solid var(--info);
+  color: var(--info);
+  border-radius: 16px;
+  padding: 8px 14px;
+  font-size: 22px;
+}
+
+ul.clean { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+ul.clean li::before { content: "• "; color: var(--dim); }
+
+.list { display: flex; flex-direction: column; gap: 6px; }
+.list .item { padding: 10px 16px; border-radius: 14px; border: 2px solid transparent; }
+.list .item.sel { border-color: var(--accent); }
+.list .item .sub { color: var(--dim); font-size: 20px; }
+
+.captions { margin-top: auto; display: flex; flex-direction: column; gap: 4px; font-size: 26px; }
+.captions .old { color: var(--dim); }
+.captions .partial { color: var(--info); }
+
+.center { margin: auto 0; text-align: center; }
+.pulse { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.35; } }
+
+/* Gesture hints along the bottom edge */
+.hint {
+  position: absolute;
+  left: 32px; right: 32px; bottom: 18px;
+  display: flex; flex-wrap: wrap; gap: 6px 18px;
+  font-size: 18px; color: var(--dim);
+}
+.hint b { color: var(--fg); font-weight: 600; }
+
+/* Short pop-up message */
+#toast {
+  position: fixed; left: 50%; bottom: 56px;
+  transform: translate(-50%, 12px);
+  width: max-content; max-width: min(540px, calc(100vw - 32px));
+  background: var(--bg);
+  border: 2px solid var(--accent); color: var(--accent);
+  border-radius: 18px; padding: 10px 18px;
+  font-size: 24px; text-align: center;
+  opacity: 0; transition: opacity .2s, transform .2s;
+  pointer-events: none; z-index: 10;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Developer gesture pad (add ?dev to the URL) */
+#devpad {
+  position: fixed; right: 8px; bottom: 8px; z-index: 20;
+  display: grid; grid-template-columns: repeat(3, 44px); gap: 4px;
+}
+#devpad button {
+  height: 44px; border-radius: 10px; border: 1px solid var(--line);
+  background: #111; color: var(--fg); font-size: 18px;
+}
+
+/* Phone-side editor pages scroll normally */
+body.phone .screen { height: auto; max-height: none; overflow: visible; padding-bottom: 32px; }
+body.phone textarea, body.phone input {
+  width: 100%; background: #0d0d0d; color: var(--fg);
+  border: 2px solid var(--line); border-radius: 14px;
+  font: 400 20px/1.4 ui-monospace, Menlo, Consolas, monospace; padding: 12px;
+}
+body.phone textarea { min-height: 300px; }
+body.phone button.primary {
+  background: var(--accent); color: #000; border: 0; border-radius: 14px;
+  font-size: 22px; font-weight: 700; padding: 14px 22px;
+}
+body.phone button.ghost {
+  background: transparent; color: var(--fg); border: 2px solid var(--line);
+  border-radius: 14px; font-size: 20px; padding: 12px 18px;
+}
+body.phone a { color: var(--info); }
+
+@media (max-width: 420px) {
+  html, body { font-size: 22px; }
+  .screen { padding: 20px 16px 64px; }
+  .big { font-size: 34px; }
+  .hint { left: 16px; right: 16px; }
+}

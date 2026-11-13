@@ -1,0 +1,19 @@
+{
+  "name": "glasses-apps",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Five heads-up web apps for Meta Ray-Ban Display glasses",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "DEMO=1 node server.js",
+    "test": "node tests/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  }
+}

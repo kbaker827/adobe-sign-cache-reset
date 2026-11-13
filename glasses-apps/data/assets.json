@@ -1,0 +1,55 @@
+[
+  {
+    "id": "a-0412",
+    "assetTag": "IT-00412",
+    "serial": "5CG1234XYZ",
+    "model": "HP EliteBook 840 G8",
+    "owner": "Sam Rivera (Finance)",
+    "location": "HQ 3rd floor",
+    "warrantyEnd": "2027-03-31",
+    "os": "Windows 11 23H2",
+    "notes": ["Docking station flaky on USB-C: use the barrel charger"],
+    "tickets": [
+      { "id": "INC-2291", "date": "2026-10-02", "summary": "Adobe Sign stuck on old signature: cache reset fixed it" },
+      { "id": "INC-1877", "date": "2026-06-14", "summary": "Battery health 71%: replacement ordered" }
+    ],
+    "actions": [
+      { "id": "adobe-reset", "label": "Run Adobe Sign cache reset" },
+      { "id": "open-ticket", "label": "Open a new ticket" },
+      { "id": "flag-replace", "label": "Flag for replacement" }
+    ]
+  },
+  {
+    "id": "a-0388",
+    "assetTag": "IT-00388",
+    "serial": "PF3K9Q2M",
+    "model": "Lenovo ThinkPad T14 Gen 3",
+    "owner": "Priya Shah (Legal)",
+    "location": "Remote",
+    "warrantyEnd": "2025-11-30",
+    "os": "Windows 11 23H2",
+    "notes": [],
+    "tickets": [
+      { "id": "INC-2310", "date": "2026-10-28", "summary": "VPN drops every 20 min" }
+    ],
+    "actions": [
+      { "id": "adobe-reset", "label": "Run Adobe Sign cache reset" },
+      { "id": "open-ticket", "label": "Open a new ticket" }
+    ]
+  },
+  {
+    "id": "a-0120",
+    "assetTag": "IT-00120",
+    "serial": "CN-0R5X7T",
+    "model": "Dell U2720Q Monitor",
+    "owner": "Conference Room 3B",
+    "location": "HQ 3rd floor",
+    "warrantyEnd": "2026-12-15",
+    "os": "",
+    "notes": ["Needs DisplayPort, HDMI input is dead"],
+    "tickets": [],
+    "actions": [
+      { "id": "open-ticket", "label": "Open a new ticket" }
+    ]
+  }
+]

@@ -4,3 +4,8 @@ build/
 dist/
 *.spec
 *.log
+
+# Glasses apps
+glasses-apps/node_modules/
+glasses-apps/data/store/
+glasses-apps/tests/screens/

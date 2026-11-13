@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Side Quest List</title>
+  <link rel="stylesheet" href="/shared/glass.css">
+</head>
+<body class="phone">
+  <main class="screen">
+    <div class="label">Side Quest · edit on your phone</div>
+    <div class="mid">Your task list</div>
+    <div class="dim">One task per line. The glasses show the top one first. Keep each one small.</div>
+    <textarea id="list" aria-label="Tasks, one per line"></textarea>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="primary" id="save">Save</button>
+      <button class="ghost" id="clear">Clear finished</button>
+    </div>
+    <div class="dim" id="status" role="status"></div>
+  </main>
+  <script type="module">
+    import { loadShared, saveShared } from '/shared/store.js';
+
+    const KEY = 'sidequest';
+    const box = document.getElementById('list');
+    const status = document.getElementById('status');
+    let st = await loadShared(KEY, { updatedAt: 0, nextId: 1, currentId: null, startedAt: null, nudged: 0, doorway: null, tasks: [] });
+
+    const openTasks = () => st.tasks.filter((t) => !t.done);
+    box.value = openTasks().map((t) => t.text).join('\n');
+    const doneCount = () => st.tasks.filter((t) => t.done).length;
+    status.textContent = `${openTasks().length} open · ${doneCount()} finished today`;
+
+    document.getElementById('save').addEventListener('click', async () => {
+      const lines = box.value.split('\n').map((l) => l.trim()).filter(Boolean);
+      // Keep ids (and snooze state) for tasks whose text didn't change.
+      const byText = new Map(openTasks().map((t) => [t.text, t]));
+      const open = lines.map((text) => byText.get(text) || { id: st.nextId++, text });
+      st.tasks = [...open, ...st.tasks.filter((t) => t.done)];
+      st.updatedAt = Date.now();
+      const ok = await saveShared(KEY, st);
+      status.textContent = ok ? `Saved ${open.length} tasks ✓` : 'Saved on this device only (server unreachable)';
+    });
+
+    document.getElementById('clear').addEventListener('click', async () => {
+      st.tasks = st.tasks.filter((t) => !t.done);
+      st.updatedAt = Date.now();
+      await saveShared(KEY, st);
+      status.textContent = 'Finished tasks cleared ✓';
+    });
+  </script>
+</body>
+</html>

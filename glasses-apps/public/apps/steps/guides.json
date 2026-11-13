@@ -1,0 +1,30 @@
+[
+  {
+    "id": "pancakes",
+    "title": "Fluffy pancakes",
+    "steps": [
+      { "text": "Whisk 1 cup flour, 2 tbsp sugar, 2 tsp baking powder, pinch of salt.", "timerSeconds": 0 },
+      { "text": "In another bowl whisk 1 cup milk, 1 egg, 2 tbsp melted butter.", "timerSeconds": 0 },
+      { "text": "Pour wet into dry. Stir until just combined. Lumps are fine.", "timerSeconds": 0 },
+      { "text": "Let the batter rest.", "timerSeconds": 300 },
+      { "text": "Heat a pan on medium. Add a little butter.", "timerSeconds": 0 },
+      { "text": "Pour 1/4 cup batter. Flip when bubbles pop on top.", "timerSeconds": 120 },
+      { "text": "Cook the second side until golden.", "timerSeconds": 60 },
+      { "text": "Repeat with the rest. Serve warm.", "timerSeconds": 0 }
+    ]
+  },
+  {
+    "id": "new-laptop",
+    "title": "Set up a new user laptop",
+    "steps": [
+      { "text": "Check the asset tag matches the ticket. Photo the serial label.", "timerSeconds": 0 },
+      { "text": "Plug in power and network. Power on.", "timerSeconds": 0 },
+      { "text": "Sign in with the setup account and join the domain / Intune.", "timerSeconds": 0 },
+      { "text": "Run Windows Update until nothing is left.", "timerSeconds": 0 },
+      { "text": "Install the standard app bundle from Company Portal.", "timerSeconds": 0 },
+      { "text": "Sign in to Adobe Sign once to create the profile.", "timerSeconds": 0 },
+      { "text": "Check BitLocker is on and the key is escrowed.", "timerSeconds": 0 },
+      { "text": "Update the asset record with owner and date. Close the ticket.", "timerSeconds": 0 }
+    ]
+  }
+]

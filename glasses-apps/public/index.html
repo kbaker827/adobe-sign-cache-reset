@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>Glasses Apps</title>
+  <link rel="stylesheet" href="/shared/glass.css">
+</head>
+<body>
+  <main id="app" class="screen"></main>
+  <script type="module">
+    import { onGesture } from '/shared/input.js';
+    import { h, mount, hints } from '/shared/ui.js';
+
+    const APPS = [
+      { id: 'sidequest', icon: '🧠', name: 'Side Quest', sub: 'One task at a time' },
+      { id: 'convo', icon: '🗣️', name: 'Convo Notes', sub: 'Captions + who-is-who' },
+      { id: 'xray', icon: '🔧', name: 'IT X-Ray', sub: 'Scan a label, see the device' },
+      { id: 'steps', icon: '🍳', name: 'Step by Step', sub: 'Hands-free guides' },
+      { id: 'lookup', icon: '🎯', name: 'What Is That?', sub: 'Identify · translate · read' },
+    ];
+
+    const root = document.getElementById('app');
+    let sel = 0;
+    try { sel = Math.min(APPS.length - 1, Number(sessionStorage.getItem('glasses.home')) || 0); } catch {}
+
+    function render() {
+      mount(root,
+        h('div', { class: 'label' }, 'Glasses apps'),
+        h('div', { class: 'list' }, APPS.map((a, i) =>
+          h('div', { class: `item${i === sel ? ' sel' : ''}`, 'data-app': a.id },
+            h('div', { class: 'mid' }, `${a.icon}  ${a.name}`),
+            h('div', { class: 'sub' }, a.sub)))),
+        hints({ up: '', down: 'Move', select: 'Open' }));
+    }
+
+    function open() {
+      try { sessionStorage.setItem('glasses.home', String(sel)); } catch {}
+      location.href = `/apps/${APPS[sel].id}/`;
+    }
+
+    onGesture((g) => {
+      if (g === 'up') sel = (sel + APPS.length - 1) % APPS.length;
+      else if (g === 'down') sel = (sel + 1) % APPS.length;
+      else if (g === 'select' || g === 'right') return open();
+      render();
+    });
+
+    root.addEventListener('click', (e) => {
+      const item = e.target.closest('[data-app]');
+      if (!item) return;
+      sel = APPS.findIndex((a) => a.id === item.dataset.app);
+      open();
+    });
+
+    render();
+  </script>
+</body>
+</html>
